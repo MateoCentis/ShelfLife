@@ -1,0 +1,74 @@
+# Source of truth for the Xcode project. Regenerate with: xcodegen generate
+name: ShelfLife
+options:
+  bundleIdPrefix: dev.mateo
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"
+
+targets:
+  ShelfLife:
+    type: application
+    platform: iOS
+    sources: [ShelfLife, Shared]
+    dependencies:
+      - target: ShelfLifeWidget
+    entitlements:
+      path: ShelfLife/ShelfLife.entitlements
+      properties:
+        com.apple.security.application-groups: [group.dev.mateo.ShelfLife]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.mateo.ShelfLife
+        # Same default as a new Xcode 26 app: code runs on the main actor unless marked otherwise.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: ShelfLife
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_NSCameraUsageDescription: ShelfLife uses the camera to scan product barcodes.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets: [ShelfLifeTests]
+
+  ShelfLifeWidget:
+    type: app-extension
+    platform: iOS
+    sources: [ShelfLifeWidget, Shared]
+    info:
+      path: ShelfLifeWidget/Info.plist
+      properties:
+        CFBundleDisplayName: ShelfLife
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: ShelfLifeWidget/ShelfLifeWidget.entitlements
+      properties:
+        com.apple.security.application-groups: [group.dev.mateo.ShelfLife]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.mateo.ShelfLife.Widget
+        # WidgetKit calls the timeline provider off the main thread.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  ShelfLifeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [ShelfLifeTests]
+    dependencies:
+      - target: ShelfLife
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
